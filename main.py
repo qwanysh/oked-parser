@@ -23,9 +23,16 @@ def get_oked_by_bin(bin):
         time.sleep(0.2)
 
 
+def get_bin_column_index(worksheet):
+    for index, cell in enumerate(next(worksheet.rows)):
+        if cell.value == 'bin':
+            return index
+
+
 def main():
     workbook = openpyxl.load_workbook('companies.xlsx')
     worksheet = workbook.active
+    bin_column_index = get_bin_column_index(worksheet)
     oked_column = worksheet.max_column + 1
 
     # inserting oked column header
@@ -36,7 +43,7 @@ def main():
         if row == 1:
             continue
 
-        bin = row_cells[5].value
+        bin = row_cells[bin_column_index].value
         oked = get_oked_by_bin(bin)
         worksheet.cell(row=row, column=oked_column).value = oked or '-'
 
